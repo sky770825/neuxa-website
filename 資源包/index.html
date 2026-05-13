@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餐飲品牌流水線｜AI 資源包｜NEUXA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #C4382A;
+            --gold: #D4A843;
+            --dark: #0D0D0D;
+            --dark2: #1A1A1A;
+            --light: #FAFAFA;
+            --gray: #888;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        /* Film grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(180deg, var(--dark) 0%, var(--dark2) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(196, 56, 42, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 0.3s;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 8vw, 80px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 0.5s;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero-sub {
+            font-size: 18px;
+            color: var(--gray);
+            max-width: 500px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 0.7s;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 0.9s;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        [tabindex]:focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 4px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--light);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #d94a35;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--light);
+            border: 1px solid var(--gray);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--light);
+            transform: translateY(-2px);
+        }
+
+        /* Marquee */
+        .marquee {
+            background: var(--dark2);
+            padding: 16px 0;
+            overflow: hidden;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .marquee-content {
+            display: flex;
+            animation: marquee 30s linear infinite;
+            width: max-content;
+        }
+
+        .marquee-group {
+            display: flex;
+        }
+
+        .marquee-item {
+            font-size: 14px;
+            color: var(--gray);
+            white-space: nowrap;
+            padding: 0 40px;
+        }
+
+        .marquee-item span {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* Section */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-label {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            color: var(--gray);
+            max-width: 600px;
+            margin-bottom: 60px;
+        }
+
+        /* Problem */
+        .problem {
+            background: var(--dark2);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .problem-card {
+            background: var(--dark);
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .problem-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .problem-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .problem-card p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Solution */
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .solution-card {
+            background: var(--dark2);
+            padding: 40px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--gold));
+        }
+
+        .solution-card h3 {
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .solution-list {
+            list-style: none;
+        }
+
+        .solution-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--gray);
+        }
+
+        .solution-list li::before {
+            content: '✓';
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .solution-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Industries */
+        .industries {
+            background: var(--dark2);
+        }
+
+        .industry-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .industry-tab {
+            padding: 12px 24px;
+            background: var(--dark);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .industry-tab.active,
+        .industry-tab:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--light);
+        }
+
+        .industry-content {
+            display: none;
+            background: var(--dark);
+            padding: 40px;
+            border-radius: 16px;
+        }
+
+        .industry-content.active {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .industry-info h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .industry-info p {
+            color: var(--gray);
+            margin-bottom: 24px;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 8px;
+        }
+
+        .color-swatch {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .color-swatch::after {
+            content: attr(data-hex);
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--gray);
+            white-space: nowrap;
+        }
+
+        .color-palette-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .prompt-box {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: var(--gold);
+            line-height: 1.8;
+        }
+
+        /* Pricing */
+        .pricing {
+            background: linear-gradient(180deg, var(--dark) 0%, var(--dark2) 100%);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .pricing-card {
+            background: var(--dark2);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pricing-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .pricing-price {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .pricing-price span {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--gray);
+        }
+
+        .pricing-desc {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--gold);
+        }
+
+        .pricing-contact {
+            margin-top: 12px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+            background: var(--dark2);
+        }
+
+        .cta h2 {
+            font-size: clamp(32px, 5vw, 48px);
+            margin-bottom: 16px;
+        }
+
+        .cta p {
+            color: var(--gray);
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        /* Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .marquee-content {
+                animation: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .industry-content.active {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">AI 資源包｜餐飲品牌流水線</div>
+            <h1>你的餐飲品牌<br><span>30分鐘完成</span></h1>
+            <p class="hero-sub">不需要設計師，不需要顧問。從品牌定位到視覺素材，用 AI 一次搞定。</p>
+            <div class="hero-cta">
+                <a href="#pricing" class="btn btn-primary">取得資源包</a>
+                <a href="#industries" class="btn btn-outline">查看案例</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee">
+        <div class="marquee-content">
+            <div class="marquee-group">
+                <div class="marquee-item"><span aria-hidden="true">●</span> 品牌定位 Prompt</div>
+                <div class="marquee-item"><span aria-hidden="true">●</span> DALL-E 圖片攻略</div>
+                <div class="marquee-item"><span aria-hidden="true">●</span> 色彩配方</div>
+                <div class="marquee-item"><span aria-hidden="true">●</span> 社群文案模板</div>
+                <div class="marquee-item"><span aria-hidden="true">●</span> 5個產業參考</div>
+            </div>
+            <div class="marquee-group" aria-hidden="true">
+                <div class="marquee-item"><span aria-hidden="true">●</span> 品牌定位 Prompt</div>
+                <div class="marquee-item"><span aria-hidden="true">●</span> DALL-E 圖片攻略</div>
+                <div class="marquee-item"><span aria-hidden="true">●</span> 色彩配方</div>
+                <div class="marquee-item"><span aria-hidden="true">●</span> 社群文案模板</div>
+                <div class="marquee-item"><span aria-hidden="true">●</span> 5個產業參考</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem -->
+    <section class="problem">
+        <div class="container">
+            <div class="section-label">痛點</div>
+            <h2 class="section-title">餐飲品牌視覺，到底誰來做？</h2>
+            <p class="section-desc">找人貴、自己學太慢、AI 工具不知道怎麼用。多數餐飲創業者的困境。</p>
+            
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-icon" aria-hidden="true">💸</div>
+                    <h3>設計師太貴</h3>
+                    <p>找人做一套品牌視覺，動輒 2-5 萬。還要來回溝通修改，少則兩週，多則一個月。</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon" aria-hidden="true">🤯</div>
+                    <h3>自己學太慢</h3>
+                    <p>Figma、Canva、AI 工具...研究了一圈，發現自己還是做不出「看起來專業」的素材。</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon" aria-hidden="true">📱</div>
+                    <h3>內容做不完</h3>
+                    <p>IG、FB、Google 商家、外送平台...每個平台都要圖文，沒有團隊根本跟不上。</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon" aria-hidden="true">🔄</div>
+                    <h3>更新來不及</h3>
+                    <p>菜單改了、季節換了、節日到了...每次都要重新找人做，來不及又浪費錢。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution -->
+    <section class="solution">
+        <div class="container">
+            <div class="section-label">解決方案</div>
+            <h2 class="section-title">用 AI，30分鐘完成品牌視覺</h2>
+            <p class="section-desc">不是取代設計師，是讓你快速拿到「可以用」的素材，再找人客製化。</p>
+
+            <div class="solution-grid">
+                <div class="solution-card">
+                    <h3><span aria-hidden="true">📦</span> 完整資源包</h3>
+                    <ul class="solution-list">
+                        <li>品牌定位 Prompt 套件</li>
+                        <li>DALL-E 圖片生成攻略</li>
+                        <li>5個產業色彩配方</li>
+                        <li>社群文案 Prompt 模板</li>
+                        <li>參考案例與關鍵詞</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h3><span aria-hidden="true">⚡</span> 快速見效</h3>
+                    <ul class="solution-list">
+                        <li>5分鐘產出第一個品牌定位</li>
+                        <li>10分鐘生成第一張視覺素材</li>
+                        <li>30分鐘完成基礎品牌設定</li>
+                        <li>後續可持續產出內容</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h3><span aria-hidden="true">🎯</span> 產業專屬</h3>
+                    <ul class="solution-list">
+                        <li>火鍋 / 燒肉 / 茶飲</li>
+                        <li>咖啡 / 韓式料理</li>
+                        <li>每個產業都有對應的 Prompt</li>
+                        <li>直接套用，不需要研究</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries -->
+    <section class="industries" id="industries">
+        <div class="container">
+            <div class="section-label">產業案例</div>
+            <h2 class="section-title">5個餐飲產業的視覺配方</h2>
+            <p class="section-desc">每個產業都有專屬的色彩、燈光、氛圍關鍵詞。</p>
+
+            <div class="industry-tabs" role="tablist" aria-label="產業類別">
+                <button id="tab-hotpot" class="industry-tab active" type="button" role="tab" aria-selected="true" aria-controls="hotpot-panel" tabindex="0" onclick="showIndustry('hotpot-panel', this)" data-target="hotpot-panel">火鍋</button>
+                <button id="tab-bbq" class="industry-tab" type="button" role="tab" aria-selected="false" aria-controls="bbq-panel" tabindex="-1" onclick="showIndustry('bbq-panel', this)" data-target="bbq-panel">燒肉</button>
+                <button id="tab-tea" class="industry-tab" type="button" role="tab" aria-selected="false" aria-controls="tea-panel" tabindex="-1" onclick="showIndustry('tea-panel', this)" data-target="tea-panel">茶飲</button>
+                <button id="tab-coffee" class="industry-tab" type="button" role="tab" aria-selected="false" aria-controls="coffee-panel" tabindex="-1" onclick="showIndustry('coffee-panel', this)" data-target="coffee-panel">咖啡</button>
+                <button id="tab-korean" class="industry-tab" type="button" role="tab" aria-selected="false" aria-controls="korean-panel" tabindex="-1" onclick="showIndustry('korean-panel', this)" data-target="korean-panel">韓式</button>
+            </div>
+
+            <div id="hotpot-panel" class="industry-content active" role="tabpanel" aria-labelledby="tab-hotpot" tabindex="0">
+                <div class="industry-info">
+                    <h3><span aria-hidden="true">🔥</span> 火鍋</h3>
+                    <p>深夜、都會、Lounge 風格。暖霧逆光，營造麻辣煙霧的儀式感。</p>
+                    <div class="color-palette-label">色彩配方</div>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background:#C4382A" data-hex="#C4382A"><span class="sr-only">#C4382A</span></div>
+                        <div class="color-swatch" style="background:#D4A843" data-hex="#D4A843"><span class="sr-only">#D4A843</span></div>
+                        <div class="color-swatch" style="background:#1A1A1A" data-hex="#1A1A1A"><span class="sr-only">#1A1A1A</span></div>
+                        <div class="color-swatch" style="background:#2D2D2D" data-hex="#2D2D2D"><span class="sr-only">#2D2D2D</span></div>
+                        <div class="color-swatch" style="background:#FFFFFF" data-hex="#FFFFFF"><span class="sr-only">#FFFFFF</span></div>
+                    </div>
+                </div>
+                <div class="prompt-box">
+                    A premium mala hot pot, rich broth glowing deep red, golden steam rising dramatically, dark stone table, warm amber backlight, cinematic moody atmosphere, low angle, shallow depth of field, realistic food photography, shot on full-frame camera, 35mm lens, f/1.8, RAW photo, 8K detail
+                </div>
+            </div>
+
+            <div id="bbq-panel" class="industry-content" role="tabpanel" aria-labelledby="tab-bbq" hidden>
+                <div class="industry-info">
+                    <h3><span aria-hidden="true">🥩</span> 燒肉</h3>
+                    <p>炭火、煙霧、粗獷。側光強調火焰，暖黃色調呈現燒烤的原始魅力。</p>
+                    <div class="color-palette-label">色彩配方</div>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background:#8B2500" data-hex="#8B2500"><span class="sr-only">#8B2500</span></div>
+                        <div class="color-swatch" style="background:#D4A843" data-hex="#D4A843"><span class="sr-only">#D4A843</span></div>
+                        <div class="color-swatch" style="background:#2D2D2D" data-hex="#2D2D2D"><span class="sr-only">#2D2D2D</span></div>
+                        <div class="color-swatch" style="background:#1A1A1A" data-hex="#1A1A1A"><span class="sr-only">#1A1A1A</span></div>
+                        <div class="color-swatch" style="background:#FFFFFF" data-hex="#FFFFFF"><span class="sr-only">#FFFFFF</span></div>
+                    </div>
+                </div>
+                <div class="prompt-box">
+                    Wagyu beef sizzling on charcoal grill, dramatic smoky atmosphere, warm orange rim light from flames, dark moody background, intimate dining, close-up on meat with char marks, cinematic food photography, shallow depth of field, shot on full-frame camera, 35mm lens, f/1.8, RAW photo style, 8K detail
+                </div>
+            </div>
+
+            <div id="tea-panel" class="industry-content" role="tabpanel" aria-labelledby="tab-tea" hidden>
+                <div class="industry-info">
+                    <h3><span aria-hidden="true">🍵</span> 茶飲</h3>
+                    <p>清新、透亮、療癒。自然光搭配柔光，展現茶飲的清爽質感。</p>
+                    <div class="color-palette-label">色彩配方</div>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background:#2D5A27" data-hex="#2D5A27"><span class="sr-only">#2D5A27</span></div>
+                        <div class="color-swatch" style="background:#8BC34A" data-hex="#8BC34A"><span class="sr-only">#8BC34A</span></div>
+                        <div class="color-swatch" style="background:#F5F5DC" data-hex="#F5F5DC"><span class="sr-only">#F5F5DC</span></div>
+                        <div class="color-swatch" style="background:#FAFAFA" data-hex="#FAFAFA"><span class="sr-only">#FAFAFA</span></div>
+                        <div class="color-swatch" style="background:#1A1A1A" data-hex="#1A1A1A"><span class="sr-only">#1A1A1A</span></div>
+                    </div>
+                </div>
+                <div class="prompt-box">
+                    Fresh fruit tea with boba, crystal clear glass showing colorful layers, natural daylight, fresh green leaves, modern minimalist background, overhead flat lay, clean and vibrant, shallow depth of field, realistic photography, full-frame camera, 35mm lens, f/2.0, RAW photo, 8K detail
+                </div>
+            </div>
+
+            <div id="coffee-panel" class="industry-content" role="tabpanel" aria-labelledby="tab-coffee" hidden>
+                <div class="industry-info">
+                    <h3><span aria-hidden="true">☕</span> 咖啡</h3>
+                    <p>暖調、文青、慢時光。暖黃木質調，呈現咖啡館的溫馨氛圍。</p>
+                    <div class="color-palette-label">色彩配方</div>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background:#6F4E37" data-hex="#6F4E37"><span class="sr-only">#6F4E37</span></div>
+                        <div class="color-swatch" style="background:#D2B48C" data-hex="#D2B48C"><span class="sr-only">#D2B48C</span></div>
+                        <div class="color-swatch" style="background:#2C2C2C" data-hex="#2C2C2C"><span class="sr-only">#2C2C2C</span></div>
+                        <div class="color-swatch" style="background:#FAFAFA" data-hex="#FAFAFA"><span class="sr-only">#FAFAFA</span></div>
+                        <div class="color-swatch" style="background:#1A1A1A" data-hex="#1A1A1A"><span class="sr-only">#1A1A1A</span></div>
+                    </div>
+                </div>
+                <div class="prompt-box">
+                    Latte art in ceramic cup, warm morning sunlight through window, wooden counter, exposed brick wall, shallow depth of field focusing on cup, steam rising, nostalgic warm tones, realistic photography, full-frame camera, 35mm lens, f/1.8, RAW photo, 8K detail, warm brown and cream palette
+                </div>
+            </div>
+
+            <div id="korean-panel" class="industry-content" role="tabpanel" aria-labelledby="tab-korean" hidden>
+                <div class="industry-info">
+                    <h3><span aria-hidden="true">🇰🇷</span> 韓式</h3>
+                    <p>繽紛、活力、年輕。明亮乾淨的視角，展現韓式料理的繽紛色彩。</p>
+                    <div class="color-palette-label">色彩配方</div>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background:#C73E3A" data-hex="#C73E3A"><span class="sr-only">#C73E3A</span></div>
+                        <div class="color-swatch" style="background:#FFD700" data-hex="#FFD700"><span class="sr-only">#FFD700</span></div>
+                        <div class="color-swatch" style="background:#1A1A1A" data-hex="#1A1A1A"><span class="sr-only">#1A1A1A</span></div>
+                        <div class="color-swatch" style="background:#FAFAFA" data-hex="#FAFAFA"><span class="sr-only">#FAFAFA</span></div>
+                        <div class="color-swatch" style="background:#1A1A1A" data-hex="#1A1A1A"><span class="sr-only">#1A1A1A</span></div>
+                    </div>
+                </div>
+                <div class="prompt-box">
+                    Vibrant Korean BBQ spread, colorful banchan dishes, sizzling pork belly, fresh lettuce, gochujang sauce, bright lively atmosphere, overhead or 45-degree angle, clean white plates, appetizing presentation, cinematic food photography, shallow depth of field, full-frame camera, 35mm lens, f/1.8, RAW photo, 8K detail
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-label">定價</div>
+            <h2 class="section-title">簡單的定價方案</h2>
+            <p class="section-desc">買斷制，沒有月費壓力。付了就是你的。</p>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-name">單包買斷</div>
+                    <div class="pricing-price">NT$3,480</div>
+                    <p class="pricing-desc">適合先試一個產業的創業者</p>
+                    <ul class="pricing-features">
+                        <li>餐飲品牌流水線完整資源包</li>
+                        <li>5個產業視覺配方</li>
+                        <li>品牌定位 Prompt 套件</li>
+                        <li>DALL-E 圖片攻略</li>
+                        <li>社群文案模板</li>
+                    </ul>
+                    <a href="mailto:sales@neuxa.com?subject=%E8%B3%BC%E8%B2%B7%E9%A4%90%E9%A3%B2%E5%93%81%E7%89%8C%E6%B5%81%E6%B0%B4%E7%B7%9A%E8%B3%87%E6%BA%90%E5%8C%85" class="btn btn-outline" style="width:100%; text-align:center;">取得資源包</a>
+                    <p class="pricing-contact">sales@neuxa.com</p>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">熱門</div>
+                    <div class="pricing-name">產業年訂閱</div>
+                    <div class="pricing-price">NT$6,800<span>/年</span></div>
+                    <p class="pricing-desc">適合需要持續更新內容的店家</p>
+                    <ul class="pricing-features">
+                        <li>單包所有內容</li>
+                        <li>每季流程更新</li>
+                        <li>新增子場景補充包</li>
+                        <li>社群提問頻道</li>
+                        <li>優先取得新產業包</li>
+                    </ul>
+                    <a href="mailto:sales@neuxa.com?subject=%E8%B3%BC%E8%B2%B7%E7%94%A2%E6%A5%AD%E5%B9%B4%E8%A8%82%E9%96%B1" class="btn btn-primary" style="width:100%; text-align:center;">開始年訂閱</a>
+                    <p class="pricing-contact">sales@neuxa.com</p>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-name">全產業庫</div>
+                    <div class="pricing-price">NT$19,800<span>/年</span></div>
+                    <p class="pricing-desc">適合顧問公司或代操業者</p>
+                    <ul class="pricing-features">
+                        <li>所有已上架產業包</li>
+                        <li>白標授權（可改名給客戶用）</li>
+                        <li>優先取得新包搶先版</li>
+                        <li>企業訓練教材</li>
+                    </ul>
+                    <a href="mailto:sales@neuxa.com?subject=%E8%B3%BC%E8%B2%B7%E7%99%BD%E6%A8%99%E6%8E%88%E6%AC%8A" class="btn btn-outline" style="width:100%; text-align:center;">取得白標</a>
+                    <p class="pricing-contact">sales@neuxa.com</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2>想要一個<strong style="color:var(--primary)">示範案例</strong>？</h2>
+            <p>如果你現在有一個餐飲品牌構想，告訴我。我用 30 分鐘幫你跑一遍流程，你可以看到「買了之後會拿到什麼」。</p>
+            <a href="mailto:contact@neuxa.com?subject=%E9%A4%90%E9%A3%B2%E5%93%81%E7%89%8C%E6%B5%81%E6%B0%B4%E7%B7%9A%E8%B3%87%E6%BA%90%E5%8C%85" class="btn btn-primary">預約示範 contact@neuxa.com</a>
+        </div>
+    </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 NEUXA｜AI 資源包｜餐飲品牌流水線</p>
+        </div>
+    </footer>
+
+    <script>
+        const industryTabs = Array.from(document.querySelectorAll('.industry-tab'));
+        const industryPanels = Array.from(document.querySelectorAll('.industry-content'));
+
+        function showIndustry(panelId, btn) {
+            const selectedTab = btn || industryTabs.find(tab => tab.getAttribute('aria-controls') === panelId);
+
+            industryPanels.forEach(panel => {
+                const isActive = panel.id === panelId;
+                panel.classList.toggle('active', isActive);
+                panel.hidden = !isActive;
+                if (isActive) {
+                    panel.setAttribute('tabindex', '0');
+                } else {
+                    panel.removeAttribute('tabindex');
+                }
+            });
+
+            industryTabs.forEach(tab => {
+                const isActive = tab === selectedTab;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', String(isActive));
+                tab.setAttribute('tabindex', isActive ? '0' : '-1');
+            });
+        }
+
+        document.querySelector('.industry-tabs').addEventListener('keydown', event => {
+            if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                return;
+            }
+
+            event.preventDefault();
+            const currentIndex = industryTabs.indexOf(document.activeElement);
+            const direction = event.key === 'ArrowRight' ? 1 : -1;
+            const nextIndex = (currentIndex + direction + industryTabs.length) % industryTabs.length;
+            const nextTab = industryTabs[nextIndex];
+
+            showIndustry(nextTab.getAttribute('aria-controls'), nextTab);
+            nextTab.focus();
+        });
+    </script>
+</body>
+</html>
